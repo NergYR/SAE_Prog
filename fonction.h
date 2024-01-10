@@ -28,6 +28,8 @@ struct results
         int rq_header;
         int rq_unknown;
         int sql_injection;
+        int secure_http_response;
+        int http_response;
         int total;
 };
 struct log_line scanLine();

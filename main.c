@@ -24,6 +24,7 @@ int main() {
     printf("Nombre de requetes en Septembre: %d\n", results().sep);
     printf("Nombre de requetes en Octobre: %d\n", results().oct);
     printf("Nombre de requetes en Novembre: %d\n", results().nov);
+    printf("Nombre de requetes depuis HTTPS: %d\n", results().secure_http_response);
 
 
 

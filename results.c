@@ -35,6 +35,7 @@ struct results results(){
     resultats.rq_unknown = 0;
     resultats.sql_injection = 0;
     resultats.total = 0;
+    resultats.secure_http_response = 0;
 
     while (1) {
         current_line = scanLine(file, &current_line);
@@ -53,6 +54,9 @@ struct results results(){
             resultats.rq_header++;
         } else {
             resultats.rq_unknown++;
+        }
+        if (strstr(current_line.user_agent, "https" ) != NULL){
+            resultats.secure_http_response++;
         }
         if (strstr(current_line.timestamp, "Dec") != NULL){
             resultats.dec++;
