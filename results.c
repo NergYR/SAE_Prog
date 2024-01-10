@@ -4,6 +4,7 @@
 #include "fonction.h"
 
 
+
 /// @brief Fonction qui permet de lire le fichier log et de compter le nombre de requetes POST, GET, HEAD et inconnues
 /// @return struct results 
 /// @return jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec, rq_post, rq_get, rq_header, rq_unknown, sql_injection, total
