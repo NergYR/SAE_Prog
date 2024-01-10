@@ -47,7 +47,6 @@ struct results results(){
 
         if (strstr(current_line.request, "POST") != NULL) {
             resultats.rq_post++;
-            //printf("%s\n", current_line.request);
         } else if (strstr(current_line.request, "GET") != NULL) {
             resultats.rq_get++;
         } else if (strstr(current_line.request, "HEAD") != NULL) {
