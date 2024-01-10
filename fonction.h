@@ -29,8 +29,10 @@ struct results
         int rq_unknown;
         int sql_injection;
         int secure_http_response;
-        int http_response;
         int total;
 };
 struct log_line scanLine();
 struct results results();
+void versiontexte();
+int versiongraphique();
+int versionweb();

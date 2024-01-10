@@ -3,30 +3,23 @@
 #include <string.h>
 #include "fonction.h"
 
-int main() {
+int main(int argc, char const *argv[]) {
     
     
+    if (argc > 1) {
+      if (strcmp(argv[1],"-txt")==0) {
+        versiontexte();
+      }
+      if (strcmp(argv[1],"-gr")==0) {
+        versiongraphique();
+      }
+      
+    } else {
+      versionweb();
+    }
 
-    // Affichage des résultats
-    printf("Nombre de requetes POST : %d\n", results().rq_get);
-    printf("Nombre de requetes GET : %d\n", results().rq_get);
-    printf("Nombre de requetes HEAD : %d\n", results().rq_header);
-    printf("Nombre de requetes inconnues : %d\n", results().rq_unknown);
-    printf("Nombre de requetes en Decembre: %d\n", results().dec);
-    printf("Nombre de requetes en Janvier: %d\n", results().jan);
-    printf("Nombre de requetes en Fevrier: %d\n", results().feb);
-    printf("Nombre de requetes en Mars: %d\n", results().mar);
-    printf("Nombre de requetes en Avril: %d\n", results().apr);
-    printf("Nombre de requetes en Mai: %d\n", results().may);
-    printf("Nombre de requetes en Juin: %d\n", results().jun);
-    printf("Nombre de requetes en Juillet: %d\n", results().jul);
-    printf("Nombre de requetes en Aout: %d\n", results().aug);
-    printf("Nombre de requetes en Septembre: %d\n", results().sep);
-    printf("Nombre de requetes en Octobre: %d\n", results().oct);
-    printf("Nombre de requetes en Novembre: %d\n", results().nov);
-    printf("Nombre de requetes depuis HTTPS: %d\n", results().secure_http_response);
+    return EXIT_SUCCESS;
 
 
 
-    return 0;
 }

@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "libgraphique.h"
+#include "lib/libgraphique.h"
 
 void lecture_style()
 {
