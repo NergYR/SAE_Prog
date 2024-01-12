@@ -9,7 +9,8 @@ struct log_line
 };
 ///@brief struct results 
 ///@return int(jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec, rq_post, rq_get, rq_header, rq_unknown, sql_injection, total)
-struct Results
+/// @brief Type de la Structure de donnée 
+typedef struct Results
 {
         int jan;
         int feb;
@@ -30,9 +31,9 @@ struct Results
         int sql_injection;
         int secure_http_response;
         int total;
-};
+}Results;
 struct log_line scanLine();
 struct Results results();
 void versiontexte();
 int versiongraphique();
-int versionweb();
+void versionweb();
