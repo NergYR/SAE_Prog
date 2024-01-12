@@ -47,7 +47,8 @@ clean:
 	$(CC) $(FLAGS) -c $^ -o $@
 
 
-create: $(SRC_PATH)main.o $(SRC_PATH)fonction.o $(SRC_PATH)results.o $(SRC_PATH)../lib/libgraphique.o
+create: $(SRC_PATH)main.o $(SRC_PATH)fonction.o $(SRC_PATH)results.o $(SRC_PATH)versiontexte.o $(SRC_PATH)versionweb.o $(SRC_PATH)versiongraphique.o 
+$(SRC_PATH)../lib/libgraphique.o
 	$(CC) $(FLAGS) -o $(DESTDIR)$@ $^ $(SDL_CFLAGS) $(SDL_LDFLAGS) $(LIBS) 
 	rm $(SRC_PATH)*.o
 ```
