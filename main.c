@@ -11,7 +11,15 @@ int main(int argc, char const *argv[]) {
         versiontexte();
       }
       if (strcmp(argv[1],"-gr")==0) {
-        versiongraphique();
+        if(strcmp(argv[2],"m")==0){
+          versiongraphique(1);
+        }else if (strcmp(argv[2],"rq")==0)
+        {
+          versiongraphique(2);
+        }else if (strcmp(argv[2]," ")==0){
+          printf("Invalid argument\n");
+          printf("Please use -gr m or -gr rq\n");
+        }
       }
       
     } else {

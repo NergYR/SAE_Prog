@@ -4,8 +4,7 @@
 #include "fonction.h"
 #include "lib/libgraphique.h"
 
-/// @brief Fonction qui permet de lire la ligne et extraire l'ip, le timestamp, request et user_agent
-/// @param file fichier log, log_line stucture
+
 struct log_line scanLine(FILE *file, struct log_line *log_line)
 {
     char line[512];
@@ -24,23 +23,26 @@ struct log_line scanLine(FILE *file, struct log_line *log_line)
 };
 void versiontexte()
 {
-    printf("Nombre de requetes POST : %d\n", results().rq_get);
-    printf("Nombre de requetes GET : %d\n", results().rq_get);
-    printf("Nombre de requetes HEAD : %d\n", results().rq_header);
-    printf("Nombre de requetes inconnues : %d\n", results().rq_unknown);
-    printf("Nombre de requetes en Decembre: %d\n", results().dec);
-    printf("Nombre de requetes en Janvier: %d\n", results().jan);
-    printf("Nombre de requetes en Fevrier: %d\n", results().feb);
-    printf("Nombre de requetes en Mars: %d\n", results().mar);
-    printf("Nombre de requetes en Avril: %d\n", results().apr);
-    printf("Nombre de requetes en Mai: %d\n", results().may);
-    printf("Nombre de requetes en Juin: %d\n", results().jun);
-    printf("Nombre de requetes en Juillet: %d\n", results().jul);
-    printf("Nombre de requetes en Aout: %d\n", results().aug);
-    printf("Nombre de requetes en Septembre: %d\n", results().sep);
-    printf("Nombre de requetes en Octobre: %d\n", results().oct);
-    printf("Nombre de requetes en Novembre: %d\n", results().nov);
-    printf("Nombre de requetes depuis HTTPS: %d\n", results().secure_http_response);
+   int totalRequests = results().total;
+
+    printf("Nombre de requetes POST : %.2f%%\n", (float)results().rq_post / totalRequests * 100);
+    printf("Nombre de requetes GET : %.2f%%\n", (float)results().rq_get / totalRequests * 100);
+    printf("Nombre de requetes HEAD : %.2f%%\n", (float)results().rq_header / totalRequests * 100);
+    printf("Nombre de requetes inconnues : %.2f%%\n", (float)results().rq_unknown / totalRequests * 100);
+    printf("Nombre de requetes en Decembre: %.2f%%\n", (float)results().dec / totalRequests * 100);
+    printf("Nombre de requetes en Janvier: %.2f%%\n", (float)results().jan / totalRequests * 100);
+    printf("Nombre de requetes en Fevrier: %.2f%%\n", (float)results().feb / totalRequests * 100);
+    printf("Nombre de requetes en Mars: %.2f%%\n", (float)results().mar / totalRequests * 100);
+    printf("Nombre de requetes en Avril: %.2f%%\n", (float)results().apr / totalRequests * 100);
+    printf("Nombre de requetes en Mai: %.2f%%\n", (float)results().may / totalRequests * 100);
+    printf("Nombre de requetes en Juin: %.2f%%\n", (float)results().jun / totalRequests * 100);
+    printf("Nombre de requetes en Juillet: %.2f%%\n", (float)results().jul / totalRequests * 100);
+    printf("Nombre de requetes en Aout: %.2f%%\n", (float)results().aug / totalRequests * 100);
+    printf("Nombre de requetes en Septembre: %.2f%%\n", (float)results().sep / totalRequests * 100);
+    printf("Nombre de requetes en Octobre: %.2f%%\n", (float)results().oct / totalRequests * 100);
+    printf("Nombre de requetes en Novembre: %.2f%%\n", (float)results().nov / totalRequests * 100);
+    printf("Nombre de requetes depuis HTTPS: %.2f%%\n", (float)results().secure_http_response / totalRequests * 100);
+
 }
 
 
@@ -61,21 +63,20 @@ int max_mois(Results *resultats)
 
     return max;
 }
-int max_rq(Results *resultats){
+int max_rq(Results *resultats) {
     int max = resultats->rq_post;
 
     int rq[5] = {resultats->rq_get, resultats->rq_post, resultats->rq_header, resultats->rq_unknown, resultats->secure_http_response};
 
-    for (int i = 0; i < 5; i++)
-    {
-        if (rq[i] > max)
-        {
+    for (int i = 0; i < 5; i++) {
+        if (rq[i] > max) {
             max = rq[i];
         }
     }
 
     return max;
 }
+
 
 
 
@@ -88,7 +89,7 @@ void versiongraphique_m(Results *resultats)
 
     char mois[12][4] = {"Jan", "Fev", "Mar", "Avr", "Mai", "Juin", "Juil", "Aou", "Sep", "Oct", "Nov", "Dec"};
 
-    //afficher_texte("Depuis le 01/Jan/2018 on a enregistré 998 connexions.", 12, p, noir);
+    afficher_texte("Stats Selon les mois", 12, p, noir);
 
     p.y = 300;
     afficher_texte(" Jan  Fev  Mar  Avr  Mai  Juin  Juil  Aou  Sep  Oct  Nov  Dec", 14, p, vert);
@@ -100,7 +101,6 @@ void versiongraphique_m(Results *resultats)
     {
         int hauteur;
 
-        // Utiliser le tableau de mois pour accéder aux valeurs correspondantes
         switch (i)
         {
         case 0:
@@ -143,7 +143,6 @@ void versiongraphique_m(Results *resultats)
             break;
         }
 
-        // Utiliser hauteur pour dessiner la barre pour le mois actuel
         dessiner_rectangle((Point){x, 221 - hauteur}, largeur, hauteur, orange);
         afficher_texte(mois[i], 14, (Point){x + 5, 235}, blanc);
         x += decalage;
@@ -153,10 +152,8 @@ void versiongraphique_m(Results *resultats)
     attendre_clic();
     fermer_fenetre();
 
-    // Ajout du calcul et de l'affichage des statistiques
-    //calculer_statistiques(resultats);
-    //affichestatistiques(resultats);
 }
+
 void versiongraphique_rq(Results *resultats)
 {
     printf("Version graphique - Statistiques sur les types de requêtes\n");
@@ -165,6 +162,8 @@ void versiongraphique_rq(Results *resultats)
     dessiner_rectangle((Point){0, 0}, 430, 350, blanc);
 
     char types_requetes[5][20] = {"rq_post", "rq_get", "rq_header", "rq_unknown", "secure_http_response"};
+    afficher_texte("Stats Selon les Requetes", 12, p, noir);
+
 
     p.y = 300;
     afficher_texte(" Post  Get  Header  Inconnu  HTTPS", 14, p, vert);
@@ -176,57 +175,45 @@ void versiongraphique_rq(Results *resultats)
     {
         float hauteur;
 
-        // Utiliser l'index de la boucle pour accéder aux différentes statistiques de requêtes
         switch (i)
         {
         case 0:
             hauteur = (resultats->rq_post * 100) / max_value;
-            while (hauteur == 1)
-            {
-                hauteur*=10;
+            if (hauteur == 0){
+                hauteur = (resultats->rq_post * 100) % max_value;
+                hauteur = hauteur / 100;
             }
+            printf("hauteur : %f\n", hauteur);
             break;
         case 1:
             hauteur = (resultats->rq_get * 100) / max_value;
-            while (hauteur == 1)
-            {
-                hauteur*=10;
-            }
             break;
         case 2:
             hauteur = (resultats->rq_header * 100) / max_value;
-            while (hauteur == 1)
-            {
-                hauteur*=10;
+            if (hauteur == 0){
+                hauteur = (resultats->rq_header * 100) % max_value;
+                hauteur = hauteur / 10000;
             }
             break;
         case 3:
             hauteur = (resultats->rq_unknown * 100)/ max_value;
-            while (hauteur == 1)
-            {
-                hauteur*=10;
+            if(hauteur == 0){
+                hauteur = (resultats->rq_unknown * 100) % max_value;
+                hauteur = hauteur / 10000;
             }
             break;
         case 4:
             hauteur = (resultats->secure_http_response * 100) / max_value;
-            float hauteur_m = hauteur;
-            while (hauteur_m <= 1)
-            {
-                hauteur_m *= 10;
-                if (hauteur_m > 1) {
-                    break; 
-                }
+            if(hauteur == 0){
+                hauteur = (resultats->secure_http_response * 100) % max_value;
+                hauteur = hauteur / 10000;
             }
-            printf("hauteur : %f\n", hauteur_m);
-            printf("value : %d\n", resultats->secure_http_response);
-            printf("Maximum : %d\n", max_value);
             break;
         default:
             break;
         }        
 
 
-        // Utiliser hauteur pour dessiner la barre pour le type de requête actuel
         dessiner_rectangle((Point){x, 221 - hauteur}, largeur, hauteur, orange);
         afficher_texte(types_requetes[i], 14, (Point){x + 5, 235}, blanc);
         x += decalage;
@@ -247,7 +234,9 @@ void affichestatistiques(Results *resultats)
         printf("%10s : %4.1f%%\n", nommois[local_c], ((float)resultats->jan * 100.0) / (float)resultats->total);
     }
 }
-int versiongraphique()
+
+
+int versiongraphique(int choice)
 {
     Results resultats;
     resultats.jan = results().jan;
@@ -268,21 +257,18 @@ int versiongraphique()
     resultats.rq_unknown = results().rq_unknown;
     resultats.secure_http_response = results().secure_http_response;
     resultats.total = results().total;
-    //versiongraphique_m(&resultats);
-    versiongraphique_rq(&resultats);
+
+    if (choice == 1){
+        versiongraphique_m(&resultats);
+    } else if (choice == 2){
+        versiongraphique_rq(&resultats);
+    } else {
+        printf("Erreur de choix\n");
+    }
     return EXIT_SUCCESS;
 }
 void lecture_style()
 {
-  /* On aurait pu utiliser un fichier css mais il est     */
-  /* parfois plus pratique de définir le style dans le    */
-  /* code HTML généré par ce CGI-BIN.                     */
-  /* On le lit ce style depuis fichier "aecrire.html"     */
-  /* puis on l'affiche.                                   */
-  /* L'étudiant attentif pourra s'apercevoir aisément que */
-  /* cette fonction n'est pas inutile pour ses propres    */
-  /* besoins...                                           */
-
   FILE *fd;
   char str[1024];
   if ((fd = fopen("aecrire.html","r")) == NULL)
