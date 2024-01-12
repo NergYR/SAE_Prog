@@ -44,6 +44,7 @@ char *NOM_POLICE = "/usr/share/fonts/truetype/freefont/FreeSans.ttf" ;
 void ouvrir_fenetre(int largeur, int hauteur){
     SDL_Init(SDL_INIT_VIDEO); 
     ecran = SDL_SetVideoMode(largeur, hauteur, 32, SDL_HWSURFACE|SDL_DOUBLEBUF ); 
+    //ecran = SDL_GetVideoMode(largeur, hauteur, 32, SDL_surface_h_,  SDL_GL_DOUBLEBUFFER);
 
     //initialisation des variables globales
     LARGEUR = largeur ;

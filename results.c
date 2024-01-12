@@ -8,7 +8,7 @@
 /// @brief Fonction qui permet de lire le fichier log et de compter le nombre de requetes POST, GET, HEAD et inconnues
 /// @return struct results 
 /// @return jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec, rq_post, rq_get, rq_header, rq_unknown, sql_injection, total
-struct results results(){
+struct Results results(){
     FILE *file = fopen("/var/log/apache2/access.log", "r");
 
     if (file == NULL) {
@@ -16,7 +16,7 @@ struct results results(){
     }
 
     struct log_line current_line;
-    struct results resultats;
+    struct Results resultats;
     
     resultats.jan = 0;
     resultats.feb = 0;

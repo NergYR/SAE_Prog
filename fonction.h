@@ -9,7 +9,7 @@ struct log_line
 };
 ///@brief struct results 
 ///@return int(jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec, rq_post, rq_get, rq_header, rq_unknown, sql_injection, total)
-struct results
+struct Results
 {
         int jan;
         int feb;
@@ -32,7 +32,7 @@ struct results
         int total;
 };
 struct log_line scanLine();
-struct results results();
+struct Results results();
 void versiontexte();
 int versiongraphique();
 int versionweb();

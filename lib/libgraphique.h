@@ -15,8 +15,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //0. Directive préprocesseur
-#include <SDL.h>
-#include<SDL/SDL_ttf.h>
+#include <SDL2/SDL.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,7 +23,7 @@
 typedef Uint32 Couleur;
 typedef struct {int x,y;} Point;
 typedef struct {
-    int touches[SDLK_LAST] ;
+    int touches[SDLK_LALT] ;
     int sourisx ;
     int sourisy ;
     int boutong ;

@@ -3,6 +3,7 @@
         "stdlib.h": "c",
         "string.h": "c",
         "libgraphique.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "fonction.h": "c"
     }
 }
