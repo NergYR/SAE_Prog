@@ -1,0 +1,429 @@
+////////////////////////////////////////////////////////////////
+/////////////////////////main.c/////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+
+
+inclure la bibliothèque standard en C
+inclure la bibliothèque d'entrées/sorties standard en C
+inclure la bibliothèque de gestion de la mémoire en C
+inclure la bibliothèque de chaînes de caractères en C
+inclure "fonction.h"
+
+définir la fonction principale avec les arguments argc et argv
+    si (argc est supérieur à 1) alors
+        si (le premier argument est égal à "-txt") alors
+            appeler la fonction versiontexte()
+        fin si
+        si (le premier argument est égal à "-gr") alors
+            si (le deuxième argument est égal à "m") alors
+                appeler la fonction versiongraphique avec l'argument 1
+            sinon si (le deuxième argument est égal à "rq") alors
+                appeler la fonction versiongraphique avec l'argument 2
+            sinon si (le deuxième argument est une chaîne vide) alors
+                afficher "Argument invalide"
+                afficher "Veuillez utiliser -gr m ou -gr rq"
+            fin si
+        fin si
+    sinon
+        appeler la fonction versionweb()
+    fin si
+
+    retourner EXIT_SUCCESS
+fin
+
+
+
+
+////////////////////////////////////////////////////////////////
+/////////////////////////fonction.c/////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+
+
+
+inclure la bibliothèque standard en C
+inclure la bibliothèque de gestion de la mémoire en C
+inclure la bibliothèque de chaînes de caractères en C
+inclure "fonction.h"
+inclure "lib/libgraphique.h"
+
+définir la structure log_line avec les champs ip, timestamp, request et user_agent
+
+définir la fonction scanLine prenant en paramètres un pointeur vers un fichier (FILE *) et un pointeur vers une structure log_line
+    déclarer une variable de tableau de caractères line de taille 512
+    tant que (lire une ligne du fichier avec fgets et stocker dans line n'est pas NULL) faire
+        si (analyser la ligne avec sscanf en utilisant le format spécifié "%15s - - [%31[^]]] \"%255[^\"]\" %*d %*d \"%255[^\"]\"\n"
+            et stocker les valeurs dans les champs de la structure log_line réussit avec 4 éléments lus)
+            retourner la structure log_line
+        fin si
+    fin tant que
+
+    réinitialiser les valeurs de la structure log_line à zéro en utilisant memset
+    retourner la structure log_line
+fin
+
+
+////////////////////////////////////////////////////////////////
+/////////////////////////fonction.h/////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+
+
+Structure log_line
+    ip: tableau de caractères de taille 16
+    timestamp: tableau de caractères de taille 32
+    request: tableau de caractères de taille 256
+    user_agent: tableau de caractères de taille 256
+Fin Structure
+
+Structure Results
+    jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec: entiers
+    rq_post, rq_get, rq_header, rq_unknown, sql_injection, secure_http_response, total: entiers
+Fin Structure
+
+Fonction scanLine(file: fichier log) -> log_line
+    Déclarer line: tableau de caractères de taille 512
+    Tant que (lire une ligne du fichier avec fgets et stocker dans line n'est pas NULL) faire
+        Si (analyser la ligne avec sscanf en utilisant le format spécifié et stocker les valeurs dans log_line réussit avec 4 éléments lus)
+            Retourner log_line
+        Fin Si
+    Fin Tant Que
+
+    Réinitialiser les valeurs de log_line à zéro
+    Retourner log_line
+Fin Fonction
+
+Fonction results(file: fichier log) -> Results
+    Déclarer resultats: structure Results avec les compteurs initialisés à zéro
+
+    Tant que (il y a des lignes non lues dans le fichier log) faire
+        Lire une ligne avec la fonction scanLine
+        Incrémenter les compteurs appropriés dans resultats en fonction du type de requête
+    Fin Tant Que
+
+    Retourner resultats
+Fin Fonction
+
+Fonction max_mois(resultats: Results) -> entier
+Fin Fonction
+
+Fonction max_rq(resultats: Results) -> entier
+Fin Fonction
+
+Procédure versiontexte()
+Fin Procédure
+
+Fonction versiongraphique(choice: entier) -> entier
+Fin Fonction
+
+Procédure versiongraphique_m(resultats: Results)
+Fin Procédure
+
+Procédure versiongraphique_rq(resultats: Results)
+Fin Procédure
+
+Procédure affichestatistiques(resultats: Results)
+Fin Procédure
+
+Procédure lecture_style()
+Fin Procédure
+
+Procédure versionweb()
+Fin Procédure
+
+
+////////////////////////////////////////////////////////////////
+/////////////////////////results.c//////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+
+
+Fonction results() -> Results
+    Déclarer file: pointeur vers fichier
+    file = ouvrir("/var/log/apache2/access.log", "r")
+
+    Si (file est NULL) alors
+        Afficher "Erreur d'ouverture du fichier"
+    Fin Si
+
+    Déclarer current_line: log_line
+    Déclarer resultats: Results
+
+    resultats.jan = 0
+    resultats.feb = 0
+    resultats.mar = 0
+    resultats.apr = 0
+    resultats.may = 0
+    resultats.jun = 0
+    resultats.jul = 0
+    resultats.aug = 0
+    resultats.sep = 0
+    resultats.oct = 0
+    resultats.nov = 0
+    resultats.dec = 0
+    resultats.rq_post = 0
+    resultats.rq_get = 0
+    resultats.rq_header = 0
+    resultats.rq_unknown = 0
+    resultats.sql_injection = 0
+    resultats.total = 0
+    resultats.secure_http_response = 0
+
+    Tant que (1) faire
+        current_line = scanLine(file, &current_line)
+
+        Si (le premier caractère de current_line.ip est '\0') alors
+            Sortir de la boucle
+        Fin Si
+
+        Si (current_line.request contient "POST") alors
+            Incrémenter resultats.rq_post
+        Sinon Si (current_line.request contient "GET") alors
+            Incrémenter resultats.rq_get
+        Sinon Si (current_line.request contient "HEAD") alors
+            Incrémenter resultats.rq_header
+        Sinon
+            Incrémenter resultats.rq_unknown
+        Fin Si
+
+        Si (current_line.user_agent contient "https") alors
+            Incrémenter resultats.secure_http_response
+        Fin Si
+
+        Si (current_line.timestamp contient "Dec") alors
+            Incrémenter resultats.dec
+        Sinon Si (current_line.timestamp contient "Jan") alors
+            Incrémenter resultats.jan
+        Sinon Si (current_line.timestamp contient "Feb") alors
+            Incrémenter resultats.feb
+        // ... (répéter pour chaque mois)
+        Fin Si
+
+        Incrémenter resultats.total
+    Fin Tant Que
+
+    Fermer le fichier
+    fermer(file)
+
+    Retourner resultats
+Fin Fonction
+
+
+
+
+
+////////////////////////////////////////////////////////////////
+/////////////////////////versiongraphique.c/////////////////////
+////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+Fonction max_mois(resultats: pointeur vers Results) -> entier
+    Déclarer max: entier
+    max = resultats->jan
+    Déclarer mois[12]: tableau d'entiers
+    mois = {resultats->feb, resultats->mar, resultats->apr, resultats->may, resultats->jun, resultats->jul, resultats->aug, resultats->sep, resultats->oct, resultats->nov, resultats->dec}
+
+    Pour i allant de 0 à 11 faire
+        Si (mois[i] > max) alors
+            max = mois[i]
+        Fin Si
+    Fin Pour
+
+    Retourner max
+Fin Fonction
+
+Fonction max_rq(resultats: pointeur vers Results) -> entier
+    Déclarer max: entier
+    max = resultats->rq_post
+    Déclarer rq[5]: tableau d'entiers
+    rq = {resultats->rq_get, resultats->rq_post, resultats->rq_header, resultats->rq_unknown, resultats->secure_http_response}
+
+    Pour i allant de 0 à 4 faire
+        Si (rq[i] > max) alors
+            max = rq[i]
+        Fin Si
+    Fin Pour
+
+    Retourner max
+Fin Fonction
+
+Procédure versiongraphique_m(resultats: pointeur vers Results)
+    Afficher "Version graphique"
+    Déclarer p: Point = {30, 50}
+    ouvrir_fenetre(430, 350)
+    dessiner_rectangle((Point){0, 0}, 430, 350, blanc)
+
+    Déclarer mois[12][4]: tableau de chaînes de caractères
+    mois = {"Jan", "Fev", "Mar", "Avr", "Mai", "Juin", "Juil", "Aou", "Sep", "Oct", "Nov", "Dec"}
+
+    afficher_texte("Stats Selon les mois", 12, p, noir)
+
+    p.y = 300
+    afficher_texte(" Jan  Fev  Mar  Avr  Mai  Juin  Juil  Aou  Sep  Oct  Nov  Dec", 14, p, vert)
+
+    Déclarer x, largeur, decalage: entiers
+    x = 30, largeur = 30, decalage = 31
+    Déclarer max_value: entier = max_mois(resultats)
+
+    Pour i allant de 0 à 11 faire
+        Déclarer hauteur: entier
+
+        Selon i faire
+            Cas 0:
+                hauteur = (resultats->jan * 100) / max_value
+            Cas 1:
+                hauteur = (resultats->feb * 100) / max_value
+            // Répéter pour chaque mois
+        Fin Selon
+
+        dessiner_rectangle((Point){x, 221 - hauteur}, largeur, hauteur, orange)
+        afficher_texte(mois[i], 14, (Point){x + 5, 235}, blanc)
+        x += decalage
+    Fin Pour
+
+    actualiser()
+    attendre_clic()
+    fermer_fenetre()
+Fin Procédure
+
+Procédure versiongraphique_rq(resultats: pointeur vers Results)
+    Afficher "Version graphique - Statistiques sur les types de requêtes"
+    Déclarer p: Point = {30, 50}
+    ouvrir_fenetre(430, 350)
+    dessiner_rectangle((Point){0, 0}, 430, 350, blanc)
+
+    Déclarer types_requetes[5][20]: tableau de chaînes de caractères
+    types_requetes = {"rq_post", "rq_get", "rq_header", "rq_unknown", "secure_http_response"}
+    
+    afficher_texte("Stats Selon les Requetes", 12, p, noir)
+
+    p.y = 300
+    afficher_texte(" Post  Get  Header  Inconnu  HTTPS", 14, p, vert)
+
+    Déclarer x, largeur, decalage: entiers
+    x = 30, largeur = 30, decalage = 31
+    Déclarer max_value: entier = max_rq(resultats)
+
+    Pour i allant de 0 à 5 faire
+        Déclarer hauteur: réel
+
+        Selon i faire
+            Cas 0:
+                hauteur = (resultats->rq_post * 100) / max_value
+                Si (hauteur == 0) alors
+                    hauteur = (resultats->rq_post * 100) % max_value
+                    hauteur = hauteur / 100
+                Fin Si
+            Cas 1:
+                hauteur = (resultats->rq_get * 100) / max_value
+            // Répéter pour chaque type de requête
+        Fin Selon
+
+        dessiner_rectangle((Point){x, 221 - hauteur}, largeur, hauteur, orange)
+        afficher_texte(types_requetes[i], 14, (Point){x + 5, 235}, blanc)
+        x += decalage
+    Fin Pour
+
+    actualiser()
+    attendre_clic()
+    fermer_fenetre()
+Fin Procédure
+
+Procédure affichestatistiques(resultats: pointeur vers Results)
+    Déclarer nommois[12]: tableau de chaînes de caractères
+    nommois = {"Jan", "Fev", "Mar", "Avr", "Mai", "Juin", "Juil", "Aou", "Sep", "Oct", "Nov", "Dec"}
+
+    Pour local
+
+
+
+
+
+////////////////////////////////////////////////////////////////
+/////////////////////////versiontexte.c/////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+
+
+
+Procédure versiontexte()
+    Déclarer totalRequests: entier = results().total
+
+    Afficher "Nombre de requetes POST : %.2f%%", ((float)results().rq_post / totalRequests * 100)
+    Afficher "Nombre de requetes GET : %.2f%%", ((float)results().rq_get / totalRequests * 100)
+    Afficher "Nombre de requetes HEAD : %.2f%%", ((float)results().rq_header / totalRequests * 100)
+    Afficher "Nombre de requetes inconnues : %.2f%%", ((float)results().rq_unknown / totalRequests * 100)
+    Afficher "Nombre de requetes en Decembre: %.2f%%", ((float)results().dec / totalRequests * 100)
+    Afficher "Nombre de requetes en Janvier: %.2f%%", ((float)results().jan / totalRequests * 100)
+    Afficher "Nombre de requetes en Fevrier: %.2f%%", ((float)results().feb / totalRequests * 100)
+    Afficher "Nombre de requetes en Mars: %.2f%%", ((float)results().mar / totalRequests * 100)
+    Afficher "Nombre de requetes en Avril: %.2f%%", ((float)results().apr / totalRequests * 100)
+    Afficher "Nombre de requetes en Mai: %.2f%%", ((float)results().may / totalRequests * 100)
+    Afficher "Nombre de requetes en Juin: %.2f%%", ((float)results().jun / totalRequests * 100)
+    Afficher "Nombre de requetes en Juillet: %.2f%%", ((float)results().jul / totalRequests * 100)
+    Afficher "Nombre de requetes en Aout: %.2f%%", ((float)results().aug / totalRequests * 100)
+    Afficher "Nombre de requetes en Septembre: %.2f%%", ((float)results().sep / totalRequests * 100)
+    Afficher "Nombre de requetes en Octobre: %.2f%%", ((float)results().oct / totalRequests * 100)
+    Afficher "Nombre de requetes en Novembre: %.2f%%", ((float)results().nov / totalRequests * 100)
+    Afficher "Nombre de requetes depuis HTTPS: %.2f%%", ((float)results().secure_http_response / totalRequests * 100)
+Fin Procédure
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////
+/////////////////////////versionweb.c///////////////////////////
+////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+Procédure lecture_style()
+    Déclarer fd: fichier
+    Déclarer str[1024]: chaîne de caractères
+
+    Si (ouvrir(fd, "aecrire.html", "r") échoue)
+        Afficher "ERREUR DE CHARGEMENT DE FICHIER"
+    Sinon
+        Tant que non fin_de_fichier(fd)
+            Lire_ligne(fd, str)
+            Afficher str
+        Fin Tant que
+        Fermer(fd)
+    Fin Si
+Fin Procédure
+
+Procédure versionweb()
+    Afficher "Content-type: text/html\n\n"
+    Afficher "<!doctype html>\n<html lang=\"fr\">\n<body>\n"
+    Appeler lecture_style()
+
+    Afficher "Depuis le 01/jan/2018 on a enregistre : %d\n", results().total
+    Afficher "<div id=\"vertgraph\">\n<ul>\n"
+
+    Pour chaque mois de jan à dec
+        Afficher "<li style=\"left: %dpx; height : %dpx;\">%d</li>\n", position_gauche, hauteur, hauteur/10
+        Mettre à jour position_gauche
+    Fin Pour
+
+    Afficher "</ul>\n</html>\n</body>\n"
+Fin Procédure
+
+
+
+////////////////////////////////////////////////////////////////////////
